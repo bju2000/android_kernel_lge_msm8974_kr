@@ -58,6 +58,7 @@ static DEFINE_PER_CPU(struct hotplug_cpuparm, ac_hp_cpuparm);
 
 static struct notifier_block notif;
 static struct delayed_work alucard_hotplug_work;
+static struct workqueue_struct *alucard_hp_wq;
 
 static struct hotplug_tuners {
 	unsigned int hotplug_sampling_rate;
