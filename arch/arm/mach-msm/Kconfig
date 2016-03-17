@@ -287,6 +287,7 @@ config ARCH_MSM8974
 	select ARCH_WANT_KMAP_ATOMIC_FLUSH
 	select KRAIT_REGULATOR
 	select ENABLE_VMALLOC_SAVINGS
+	select HAS_MACH_MEMUTILS
 
 config ARCH_APQ8084
 	bool "APQ8084"
@@ -588,7 +589,8 @@ config  ARCH_MSM_SCORPION
 config  ARCH_MSM_KRAIT
 	bool
 	select ARM_L1_CACHE_SHIFT_6
-	select DEVFREQ_GOV_MSM_CPUBW_HWMON
+	select DEVFREQ_GOV_MSM_BW_HWMON
+	select DEVFREQ_GOV_MSM_CACHE_HWMON
 
 config  MSM_CORTEX_A7
 	bool
@@ -1863,12 +1865,12 @@ config MSM_CPU_FREQ_SET_MIN_MAX
 config MSM_CPU_FREQ_MAX
 	int "Max CPU Frequency"
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
-	default 384000
+	default 300000
 
 config MSM_CPU_FREQ_MIN
 	int "Min CPU Frequency"
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
-	default 245760
+	default 2457600
 
 endif # CPU_FREQ_MSM
 
@@ -3044,7 +3046,25 @@ config KRAIT_REGULATOR
 	 line from the PMIC. This supply line is powered by multiple
 	 regulators running in ganged mode inside the PMIC. Enable
 	 this option to support such configurations.
+
+config HAS_MACH_MEMUTILS
+	default n
+	bool "Motorola MSM memcpy enhancements"
+	help
+	Faster memcpy performance for Krait
 endif
+
+config MSM_CPU_VOLTAGE_CONTROL
+	bool "Userspace CPU Voltage Control"
+	default y
+	help
+	  This enables userspace CPU Voltage Control.
+
+config ALUCARD_HOTPLUG
+	bool "Enable alucard-hotplug cpu hotplug driver"
+	default n
+	help
+	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
 
 config KERNEL_TEXT_MPU_PROT
         bool "Enable xpu protection of kernel r/o sections"
@@ -3053,3 +3073,13 @@ config KERNEL_TEXT_MPU_PROT
           sections early in boot. Read access is permitted to
           all masters; Write access is only permited to the
           secure world.
+
+config MSM_HOTPLUG
+	bool "MSM hotplug driver"
+	depends on HOTPLUG_CPU
+	default y
+	help
+	  The MSM hotplug driver controls on-/offlining of additional cores based
+	  on current cpu load.
+
+endif
